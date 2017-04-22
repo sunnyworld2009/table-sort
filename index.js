@@ -9,6 +9,12 @@ require('./site/index.html')
 // Apply the styles in style.css to the page.
 require('./site/style.css')
 
+ let Model = require('./site/table/table.js');
+ let Observer = require('./site/table/observer.js');
+
+ let tableModel = new Model();
+ let modelObserver = new Observer();
+
 // Change this to get detailed logging from the stomp library
 global.DEBUG = false
 
@@ -21,6 +27,11 @@ client.debug = function(msg) {
 }
 
 function connectCallback() {
+  client.subscribe('/fx/prices',(data) => {
+    // console.log(JSON.stringify(data.body));
+    // new Model();
+    tableModel.addCurrencyPair(data);
+  });
   document.getElementById('stomp-status').innerHTML = "It has now successfully connected to a stomp server serving price updates for some foreign exchange currency pairs."
 }
 
