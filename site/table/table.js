@@ -55,4 +55,10 @@ module.exports = class {
       this.state.sparklineObject[updatedData.name].push(meanValue);
     }
   }
+
+  clearSparkLine() {
+    Object.keys(this.state.sparklineObject).forEach((key) => {
+      this.state.sparklineObject[key] = [];
+    });
+  }
 }

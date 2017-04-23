@@ -5,16 +5,15 @@ module.exports = class {
   constructor() {
     this.observerState = [];
     this.currency = null;
-
+    this.subject = null;
     setInterval(() =>{
       this.initiateSparkLine();
     }, 30000);
-
-    this.initiateSparkLine();
   }
 
   Update(Subject) {
     this.observerState = Subject.GetState();
+    this.subject = Subject;
     // Append rows in the table
     // There is a chance for enhancement if we seperate out render in a Grid class
     this.renderGrid();
@@ -38,6 +37,7 @@ module.exports = class {
           }
         }
       });
+      this.subject.clearSparkLine();
     }
 
   }
