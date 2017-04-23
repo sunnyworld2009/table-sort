@@ -1,7 +1,16 @@
+const _ = require("lodash");
+//const sparkline = require("./sparkline");
+
 module.exports = class {
   constructor() {
     this.observerState = [];
     this.currency = null;
+
+    setInterval(() =>{
+      this.initiateSparkLine();
+    }, 30000);
+
+    this.initiateSparkLine();
   }
 
   Update(Subject) {
@@ -9,6 +18,28 @@ module.exports = class {
     // Append rows in the table
     // There is a chance for enhancement if we seperate out render in a Grid class
     this.renderGrid();
+  }
+
+  initiateSparkLine() {
+    console.log("I will be called every 30 secs");
+    console.log(this.observerState);
+    const sparkLineData = this.observerState.sparklineObject;
+    const table =document.getElementById("tableBody");
+
+    if(_.isObject(sparkLineData)) {
+      Object.keys(sparkLineData).forEach((key) => {
+        let data = sparkLineData[key];
+        console.log("in sparkline", key, data);
+
+        for (var i = 0, row; row = table.rows[i]; i++) {
+          const rowName = row.getAttribute("id");
+          if(key == rowName) {
+            Sparkline.draw(row.cells[5], data);
+          }
+        }
+      });
+    }
+
   }
 
   renderGrid() {
@@ -30,6 +61,11 @@ module.exports = class {
           row.cells[2].innerHTML = currency.openAsk;
           row.cells[3].innerHTML = currency.lastChangeAsk;
           row.cells[4].innerHTML = currency.lastChangeBid;
+          if(!row.cells[5].hasChildNodes) {
+            console.log("I AM THE CULPRIT", row.cells[5].innerHTML);
+            row.cells[5].innerHTML = '';
+          }
+
 
           let dupNode = !!rowToBeUpdated && table.rows[rowToBeUpdated].cloneNode(true);
           if(!!dupNode) {
@@ -46,7 +82,6 @@ module.exports = class {
   }
 
   addRows() {
-    console.log("latestCurrency currency",this.observerState.latestCurrency);
     let currency = this.observerState.latestCurrency;
     let toBeAdded = true;
     let table =document.getElementById("tableBody");
@@ -57,7 +92,6 @@ module.exports = class {
     }
     const lastChangeBid = !!currency && currency.lastChangeBid;
     let pos = this.getSortedPosition(table, lastChangeBid);
-    console.log("sorted position is" + pos);
     if(toBeAdded && !!currency) {
       const row = document.createElement("tr");
       // let row = table.insertRow(0);
@@ -72,6 +106,8 @@ module.exports = class {
       cell4.innerHTML = currency.lastChangeAsk;
       var cell5 =row.insertCell(4);
       cell5.innerHTML = currency.lastChangeBid;
+      var cell6 =row.insertCell(5);
+      cell6.innerHTML = '';
 
       if(pos === -1) {
         table.appendChild(row);
@@ -82,7 +118,6 @@ module.exports = class {
   }
 
   getSortedPosition(table, lastChangeBid) {
-    debugger;
     let returnPos = -1;
     for (var i = 0, row; row = table.rows[i]; i++) {
       const tableLastChanged = row.cells[4].innerHTML;

@@ -7,7 +7,7 @@ module.exports = class {
     // All data of the model should be stored here
     this.state = {
       currencies: [],
-      averageValues: [{usdeur:[3,7,510]},{jpyeur:[2,6,5]}],
+      sparklineObject: {},
       latestCurrency: null,
     }
   }
@@ -40,8 +40,19 @@ module.exports = class {
       } else {
         this.state.currencies[index] = updatedData;
       }
+      this.addToSparkline(updatedData);
       // console.log(this.state.currencies);
     }
+  }
 
+  addToSparkline(updatedData) {
+    // console.log(updatedData.bestBid);
+    // console.log(updatedData.beskAsk);
+    const meanValue = (parseFloat(updatedData.bestBid) + parseFloat(updatedData.bestAsk)) / 2;
+    if(!_.has(this.state.sparklineObject, updatedData.name)) {
+      this.state.sparklineObject[updatedData.name] = [meanValue];
+    } else {
+      this.state.sparklineObject[updatedData.name].push(meanValue);
+    }
   }
 }

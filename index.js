@@ -11,7 +11,6 @@ require('./site/style.css')
 
  let Model = require('./site/table/table.js');
  let Observer = require('./site/table/observer.js');
- let Grid = require('./site/table/grid.js');
 
  let tableModel = new Model();
  let modelObserver = new Observer();
