@@ -3,13 +3,26 @@ const _ = require("lodash");
 module.exports = class Model {
   constructor() {
     console.log("created Model");
-    this.currencies =[];
-    // For now just running this algorithm in my mind, Dont bother
-    this.averageValueArr = [{usdeur:[3,7,510]},{jpyeur:[2,6,5]}]
+    this.observers = [];
+    // All data of the model should be stored here
+    this.state = {
+      currencies: [],
+      averageValues: [{usdeur:[3,7,510]},{jpyeur:[2,6,5]}]
+    }
   }
   // Attach the observer to model
-  attach() {
+  Attach (Observer){
+      this.observers.push(Observer);
+  }
 
+  Notify (){
+      for(var i in this.observers){
+          this.observers[i].Update(this);
+      }
+  }
+
+  GetState() {
+    return this.state;
   }
 
   addCurrencyPair(data) {
@@ -18,13 +31,14 @@ module.exports = class Model {
       const updatedData = JSON.parse(data.body);
       //console.log(updatedData);
       // Check if this newly received data is already in our model or not
-      const index = _.findIndex(this.currencies, {'name' : updatedData.name});
+      const index = _.findIndex(this.state.currencies, {'name' : updatedData.name});
+      this.Notify();
       if (-1 === index) {
-        this.currencies.push(updatedData);
+        this.state.currencies.push(updatedData);
       } else {
-        this.currencies[index] = updatedData;
+        this.state.currencies[index] = updatedData;
       }
-      console.log(this.currencies);
+      console.log(this.state.currencies);
     }
 
   }

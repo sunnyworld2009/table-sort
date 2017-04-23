@@ -15,6 +15,8 @@ require('./site/style.css')
  let tableModel = new Model();
  let modelObserver = new Observer();
 
+ tableModel.Attach(modelObserver);
+
 // Change this to get detailed logging from the stomp library
 global.DEBUG = false
 
