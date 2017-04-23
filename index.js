@@ -32,7 +32,7 @@ function connectCallback() {
   client.subscribe('/fx/prices',(data) => {
     // console.log(JSON.stringify(data.body));
     // new Model();
-    tableModel.addCurrencyPair(data);
+    tableModel.addCurrencyPair(JSON.parse(data.body));
   });
   // document.getElementById('stomp-status').innerHTML = "It has now successfully connected to a stomp server serving price updates for some foreign exchange currency pairs."
 }

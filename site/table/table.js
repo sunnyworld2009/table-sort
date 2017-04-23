@@ -28,8 +28,8 @@ module.exports = class {
 
   addCurrencyPair(data) {
     //console.log(typeof data.body);
-    if(typeof data.body === 'string') {
-      const updatedData = JSON.parse(data.body);
+    if(_.isObject(data)) {
+      const updatedData = data;
       //console.log(updatedData);
       // Check if this newly received data is already in our model or not
       const index = _.findIndex(this.state.currencies, {'name' : updatedData.name});
