@@ -1,13 +1,14 @@
 const _ = require("lodash");
 
-module.exports = class Model {
+module.exports = class {
   constructor() {
     console.log("created Model");
     this.observers = [];
     // All data of the model should be stored here
     this.state = {
       currencies: [],
-      averageValues: [{usdeur:[3,7,510]},{jpyeur:[2,6,5]}]
+      averageValues: [{usdeur:[3,7,510]},{jpyeur:[2,6,5]}],
+      latestCurrency: null,
     }
   }
   // Attach the observer to model
@@ -35,10 +36,11 @@ module.exports = class Model {
       this.Notify();
       if (-1 === index) {
         this.state.currencies.push(updatedData);
+        this.state.latestCurrency = updatedData;
       } else {
         this.state.currencies[index] = updatedData;
       }
-      console.log(this.state.currencies);
+      // console.log(this.state.currencies);
     }
 
   }
