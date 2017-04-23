@@ -30,16 +30,10 @@ client.debug = function(msg) {
 
 function connectCallback() {
   client.subscribe('/fx/prices',(data) => {
-    // console.log(JSON.stringify(data.body));
-    // new Model();
     tableModel.addCurrencyPair(JSON.parse(data.body));
   });
-  // document.getElementById('stomp-status').innerHTML = "It has now successfully connected to a stomp server serving price updates for some foreign exchange currency pairs."
 }
 
 client.connect({}, connectCallback, function(error) {
   alert(error.headers.message)
-})
-
-// const exampleSparkline = document.getElementById('example-sparkline')
-// Sparkline.draw(exampleSparkline, [1, 2, 3, 6, 8, 20, 2, 2, 4, 2, 3])
+});

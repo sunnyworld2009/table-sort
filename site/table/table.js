@@ -2,7 +2,6 @@ const _ = require("lodash");
 
 module.exports = class {
   constructor() {
-    console.log("created Model");
     this.observers = [];
     // All data of the model should be stored here
     this.state = {
@@ -27,10 +26,8 @@ module.exports = class {
   }
 
   addCurrencyPair(data) {
-    //console.log(typeof data.body);
     if(_.isObject(data)) {
       const updatedData = data;
-      //console.log(updatedData);
       // Check if this newly received data is already in our model or not
       const index = _.findIndex(this.state.currencies, {'name' : updatedData.name});
       this.Notify();
@@ -41,13 +38,10 @@ module.exports = class {
         this.state.currencies[index] = updatedData;
       }
       this.addToSparkline(updatedData);
-      // console.log(this.state.currencies);
     }
   }
 
   addToSparkline(updatedData) {
-    // console.log(updatedData.bestBid);
-    // console.log(updatedData.beskAsk);
     const meanValue = (parseFloat(updatedData.bestBid) + parseFloat(updatedData.bestAsk)) / 2;
     if(!_.has(this.state.sparklineObject, updatedData.name)) {
       this.state.sparklineObject[updatedData.name] = [meanValue];
